@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {
   View,
   Text,
@@ -15,26 +16,30 @@ import * as Types from '../types/News';
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
-}
-interface State {
-  sourceList: Array<Types.NewsSource>;
+  sourcesList: Array<Types.NewsSource>;
+  fetchSource: () => void;
   isLoading: boolean;
 }
+interface State {}
 
-export default class HomeScreen extends React.Component<Props, State> {
-  state = {
-    sourceList: new Array<Types.NewsSource>(),
-    isLoading: true,
-  };
+export class HomeScreenBasic extends React.Component<Props, State> {
   static navigationOptions = {
     title: 'Source List',
     headerStyle: globalStyle.headerStyle,
   };
   componentDidMount() {
-    this._loadSources();
+    // DISPATCH?
+    let {fetchSource} = this.props;
+    fetchSource();
   }
   render() {
-    let {sourceList, isLoading} = this.state;
+    let {sourcesList, isLoading} = this.props;
+    let showList = false;
+    if (sourcesList != null) {
+      if (sourcesList.length > 0) {
+        showList = true;
+      }
+    }
     return (
       <View style={globalStyle.container}>
         {isLoading && (
@@ -44,9 +49,9 @@ export default class HomeScreen extends React.Component<Props, State> {
           />
         )}
         <ScrollView style={globalStyle.mainContent}>
-          {sourceList.length > 0 ? (
+          {showList ? (
             <FlatList
-              data={sourceList}
+              data={sourcesList}
               renderItem={({item}) => (
                 <View style={style.sourceListBlock}>
                   <Text
@@ -68,40 +73,35 @@ export default class HomeScreen extends React.Component<Props, State> {
       </View>
     );
   }
-
-  _loadSources = async () => {
-    let url = 'https://newsapi.org/v2/sources';
-    let data = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        Authorization: '6b81f4029cd3429c8bc0c3194efbc9c3',
-      },
-    }).then((res) => res.json());
-
-    let sourceList = [];
-    if (data) {
-      for (let item of data.sources) {
-        let source = {
-          id: item.id,
-          name: item.name,
-          description: item.description,
-          url: item.url,
-          category: item.category,
-          language: item.language,
-          country: item.country,
-        };
-        sourceList.push(source);
-      }
-      if (sourceList.length > 0) {
-        this.setState({
-          sourceList: sourceList,
-          isLoading: false,
-        });
-      }
-    }
-  };
 }
+
+interface ConnectedState {
+  sourceLoading: boolean;
+  sourceList: Array<Object>;
+}
+let mapStateToProps = (state: ConnectedState) => {
+  return {
+    isLoading: state.sourceLoading,
+    sourcesList: state.sourceList,
+  };
+};
+
+let mapDispatchToProps = (dispatch: any) => {
+  return {
+    fetchSource: () => {
+      console.log(dispatch);
+      console.log('FETCHING');
+      dispatch({type: 'FETCH_SOURCES'});
+    },
+  };
+};
+
+let HomeScreen = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeScreenBasic);
+
+export default HomeScreen;
 
 const style = StyleSheet.create({
   sourceListBlock: {
