@@ -12,27 +12,20 @@ import {
 } from 'react-native';
 import {NavigationScreenProp} from 'react-navigation';
 
+import * as Types from '../types/News';
 import globalStyle from '../styles/global';
 
-interface News {
-  author: string;
-  title: string;
-  description: string;
-  url: string;
-  urlToImage: string;
-  publishedAt: string;
-}
 interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 interface State {
-  newsList: Array<News>;
+  newsList: Array<Types.News>;
   searchText: string;
   isLoading: boolean;
 }
 export default class NewsListScreen extends React.Component<Props, State> {
   state = {
-    newsList: new Array<News>(),
+    newsList: new Array<Types.News>(),
     searchText: '',
     isLoading: true,
   };
@@ -124,7 +117,7 @@ export default class NewsListScreen extends React.Component<Props, State> {
     }).then((res) => res.json());
 
     if (data) {
-      let newsList = new Array<News>();
+      let newsList = new Array<Types.News>();
       for (let item of data.articles) {
         let article = {
           author: item.author,

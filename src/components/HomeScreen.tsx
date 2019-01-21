@@ -11,27 +11,19 @@ import {NavigationScreenProp} from 'react-navigation';
 
 import globalStyle from '../styles/global';
 
-interface NewsSource {
-  id: string;
-  name: string;
-  description: string;
-  url: string;
-  category: string;
-  language: string;
-  country: string;
-}
+import * as Types from '../types/News';
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 interface State {
-  sourceList: Array<NewsSource>;
+  sourceList: Array<Types.NewsSource>;
   isLoading: boolean;
 }
 
 export default class HomeScreen extends React.Component<Props, State> {
   state = {
-    sourceList: new Array<NewsSource>(),
+    sourceList: new Array<Types.NewsSource>(),
     isLoading: true,
   };
   static navigationOptions = {
