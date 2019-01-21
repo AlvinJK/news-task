@@ -1,21 +1,24 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {createAppContainer, createStackNavigator} from 'react-navigation'; // Version can be specified in package.json
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
-  }
-}
+import HomeScreen from './components/HomeScreen';
+import NewsListScreen from './components/NewsListScreen';
+import NewsScreen from './components/NewsScreen';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const AppNavigator = createStackNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+    },
+    NewsList: {
+      screen: NewsListScreen,
+    },
+    News: {
+      screen: NewsScreen,
+    },
   },
-});
+  {
+    initialRouteName: 'Home',
+  },
+);
+
+export default createAppContainer(AppNavigator);
