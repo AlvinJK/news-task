@@ -36,6 +36,7 @@ export default class HomeScreen extends React.Component<Props, State> {
   };
   static navigationOptions = {
     title: 'Source List',
+    headerStyle: globalStyle.headerStyle,
   };
   componentDidMount() {
     this._loadSources();

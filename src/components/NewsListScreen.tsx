@@ -38,6 +38,7 @@ export default class NewsListScreen extends React.Component<Props, State> {
   };
   static navigationOptions = {
     title: 'News List',
+    headerStyle: globalStyle.headerStyle,
   };
   componentDidMount() {
     let {navigation} = this.props;
@@ -70,10 +71,12 @@ export default class NewsListScreen extends React.Component<Props, State> {
               }
             >
               <View style={style.newsListBlock}>
-                <Image
-                  source={{uri: item.urlToImage}}
-                  style={style.newsListImage}
-                />
+                {item.urlToImage != null && (
+                  <Image
+                    source={{uri: item.urlToImage}}
+                    style={style.newsListImage}
+                  />
+                )}
                 <View style={style.newsListTextBlock}>
                   <Text style={style.newsListTextTitle}>{item.title}</Text>
                   <Text style={style.newsListTextDesc}>{item.description}</Text>
@@ -139,6 +142,7 @@ export default class NewsListScreen extends React.Component<Props, State> {
           isLoading: false,
         });
       }
+      console.log('done');
     }
   };
 }

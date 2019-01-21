@@ -15,4 +15,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     top: 60,
   },
+  headerStyle: {
+    backgroundColor: '#7BEFB2',
+  },
 });

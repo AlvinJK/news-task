@@ -18,6 +18,7 @@ export default class NewsScreen extends React.Component<Props, State> {
     let {navigation} = props;
     return {
       title: navigation.getParam('title', 'News'),
+      headerStyle: globalStyle.headerStyle,
     };
   };
   render() {
@@ -50,7 +51,6 @@ export default class NewsScreen extends React.Component<Props, State> {
     }
     return content;
   }
-
   _stopLoading() {
     this.setState({
       isLoading: false,
