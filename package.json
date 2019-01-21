@@ -4,7 +4,13 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "format": "prettier-tslint fix '**/*.(ts?|tsx?)'",
+    "lint": "tslint -p .",
+    "typecheck": "tsc --noEmit -p .",
+    "test-src": "jest",
+    "test-watch": "yarn test-src --watch",
+    "test": "yarn lint && yarn typecheck && yarn test-src"
   },
   "dependencies": {
     "expo": "^32.0.0",
@@ -13,10 +19,17 @@
   },
   "devDependencies": {
     "@types/expo": "^31.0.8",
+    "@types/jest": "^23.3.13",
     "@types/react": "^16.7.20",
     "@types/react-native": "^0.57.29",
+    "@types/react-test-renderer": "^16.0.3",
+    "jest": "^23.6.0",
+    "jest-expo": "^32.0.0",
     "prettier": "^1.16.0",
     "prettier-tslint": "^0.4.2",
+    "react-native-testing-library": "^1.5.0",
+    "react-test-renderer": "^16.7.0",
+    "ts-jest": "^23.10.5",
     "tsconfig-kodefox": "^1.0.1",
     "tslint": "^5.12.1",
     "tslint-config-kodefox": "^1.1.1",
@@ -31,5 +44,37 @@
     "trailingComma": "all",
     "arrowParens": "always"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/__tests__/**/*.ts?(x)",
+      "**/?(*.)+(spec|test).ts?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "ios.ts",
+      "ios.tsx",
+      "android.ts",
+      "android.tsx"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": {
+          "jsx": "react"
+        }
+      }
+    }
+  }
 }
