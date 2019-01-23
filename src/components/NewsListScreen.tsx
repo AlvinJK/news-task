@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {
   View,
   Text,
@@ -17,35 +18,29 @@ import globalStyle from '../styles/global';
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
-}
-interface State {
   newsList: Array<Types.News>;
-  searchText: string;
+  fetchNews: (sourceId: string) => void;
   isLoading: boolean;
 }
-export default class NewsListScreen extends React.Component<Props, State> {
+interface State {
+  searchText: string;
+}
+export class NewsListScreenBasic extends React.Component<Props, State> {
   state = {
-    newsList: new Array<Types.News>(),
     searchText: '',
-    isLoading: true,
   };
   static navigationOptions = {
     title: 'News List',
-    headerStyle: globalStyle.headerStyle,
   };
   componentDidMount() {
-    let {navigation} = this.props;
-    let sourceId = navigation.getParam('sourceId', 'NO-ID');
-    if (sourceId !== 'NO-ID') {
-      try {
-        this._loadNews(sourceId);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // DISPATCH?
+    let {fetchNews, navigation} = this.props;
+    let sourceId = navigation.getParam('sourceId', 'NO-SOURCE');
+    fetchNews(sourceId);
   }
   render() {
-    let {newsList, searchText, isLoading} = this.state;
+    let {isLoading, newsList} = this.props;
+    let {searchText} = this.state;
     let content;
     let filteredList = newsList.filter((item) =>
       item.title.toLowerCase().includes(searchText.toLowerCase()),
@@ -106,39 +101,33 @@ export default class NewsListScreen extends React.Component<Props, State> {
   _changeSearchText = (text: string) => {
     this.setState({searchText: text});
   };
-  _loadNews = async (sourceId: string) => {
-    let url = `https://newsapi.org/v2/top-headlines?sources=${sourceId}`;
-    let data = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        Authorization: '6b81f4029cd3429c8bc0c3194efbc9c3',
-      },
-    }).then((res) => res.json());
-
-    if (data) {
-      let newsList = new Array<Types.News>();
-      for (let item of data.articles) {
-        let article = {
-          author: item.author,
-          title: item.title,
-          description: item.description,
-          url: item.url,
-          urlToImage: item.urlToImage,
-          publishedAt: item.publishedAt,
-        };
-        newsList.push(article);
-      }
-      if (newsList.length > 0) {
-        this.setState({
-          newsList: newsList,
-          isLoading: false,
-        });
-      }
-      console.log('done');
-    }
-  };
 }
+
+interface ConnectedState {
+  newsListLoading: boolean;
+  newsList: Array<Types.News>;
+}
+let mapStateToProps = (state: ConnectedState) => {
+  return {
+    isLoading: state.newsListLoading,
+    newsList: state.newsList,
+  };
+};
+
+let mapDispatchToProps = (dispatch: any) => {
+  return {
+    fetchNews: (sourceId: string) => {
+      dispatch({type: 'FETCH_NEWS', sourceId: sourceId});
+    },
+  };
+};
+
+let NewsListScreen = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NewsListScreenBasic);
+
+export default NewsListScreen;
 
 const style = StyleSheet.create({
   searchInput: {

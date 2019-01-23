@@ -77,7 +77,7 @@ export class HomeScreenBasic extends React.Component<Props, State> {
 
 interface ConnectedState {
   sourceLoading: boolean;
-  sourceList: Array<Object>;
+  sourceList: Array<Types.NewsSource>;
 }
 let mapStateToProps = (state: ConnectedState) => {
   return {
@@ -89,8 +89,6 @@ let mapStateToProps = (state: ConnectedState) => {
 let mapDispatchToProps = (dispatch: any) => {
   return {
     fetchSource: () => {
-      console.log(dispatch);
-      console.log('FETCHING');
       dispatch({type: 'FETCH_SOURCES'});
     },
   };
